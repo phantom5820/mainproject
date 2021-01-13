@@ -142,7 +142,7 @@
 							하이퍼 링크를 제거, 글꼴 스타일을 바꿈 -->
 						<a style="font-weight: bold;color:red;"><%=i%></a>
 					<%}else{ %>	
-						<a href="index.jsp?pageNo=<%=i%>"><%=i%></a>
+						<a href="index.jsp?pageNo=<%=i%>&mode=<%=mode%>"><%=i%></a>
 						<!-- loop end --> 
 					<% 
 					}

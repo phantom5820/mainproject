@@ -42,7 +42,7 @@
 <nav id="menu_bar">
 	<ul>
 		<li><a href="main.jsp">HOME</a></li>
-		<li><a href="Logout.do">로그아웃</a></li>
+		<li><a href="logout.do">로그아웃</a></li>
 		<%
 			if(session.getAttribute("grade").equals("master"))
 			{
@@ -52,8 +52,8 @@
 				<%	
 			}
 		%>
-		<li><a href="member_update_view.jsp">회원정보수정</a></li>
-		<li><a href="#">문의하기</a></li>
+		<li><a href="updateView.do">회원정보수정</a></li>
+		<li><a href="qnaView.do">문의하기</a></li>
 	</ul>
 	<div id="login">
 		<table>

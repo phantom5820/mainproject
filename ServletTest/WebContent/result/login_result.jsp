@@ -7,7 +7,7 @@
 <title>로그인 결과</title>
 </head>
 <body>
-	<%=request.getAttribute("id") %>님 로그인
+	<%=request.getAttribute("id") %>님 로그인<br>
 	<%=session.getAttribute("text") %>
 </body>
 </html>

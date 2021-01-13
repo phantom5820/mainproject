@@ -11,7 +11,7 @@ import javax.servlet.http.HttpSession;
 /**
  * Servlet implementation class LoginServlet
  */
-@WebServlet("/LoginServlet")//URL Mapping(맵핑이란 연결하는것!!)
+@WebServlet("/LoginServlet")//URL Mapping(맵핑이란 연결해주는것이다)
 public class LoginServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -26,30 +26,28 @@ public class LoginServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-    //method의 속성값이 get일때 처리하는 메서드
+    //method의 속성값이 get일때 처리하는 메서드이다!
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		response.setContentType("text/html;charset=utf-8");//★화면에 출력할때 문자코드 및 콘텐트(내용형식)을 설정해주는 부분!!(한글깨짐방지!)
+		response.setContentType("text/html;charset=utf-8");//화면에 출력할때 문자코드 및 내용형식(콘텐트)을 설정해주는 부분
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 		response.getWriter().append(request.getParameter("id"));
-		//세션
-		HttpSession session = request.getSession();//request 에서 세션정보를 읽어옴
-		session.setAttribute("text", "session message");
+		//세션처리
+		HttpSession session = request.getSession();//request에서 세션 정보를 읽어옴
+		session.setAttribute("text", "세션메세지");
 		//페이지 이동
-	//	response.sendRedirect("login_result.jsp"); //사용자의 요청사항이 전부 소실되는부분(더이상 응답을 받을필요가 없을떄 쓰인다 예)로그아웃)
+//		response.sendRedirect("login_result.jsp");//사용자의 요청사항이 전부 소실((예)로그아웃 할때 사용)
 		System.out.println(request.getRequestURI());
 		request.setAttribute("id", request.getParameter("id"));
-		request.getRequestDispatcher("/result/login_result.jsp").forward(request, response);
-		System.out.println(request.getRequestURI());
+		request.getRequestDispatcher("result/login_result.jsp").forward(request, response);
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	//method의 속성값이 post일때 처리하는 메서드
+	//method의 속성값이 post일때 처리하는 메서드이다!
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		request.setCharacterEncoding("utf-8");//한글 꺠짐 방지!!(데이터를 받았을때 문자코드 변경)
+		request.setCharacterEncoding("utf-8");//한글 깨짐 방지(데이터를 받았을때 문자코드 변경해주는 부분)
 		doGet(request, response);
 	}
 

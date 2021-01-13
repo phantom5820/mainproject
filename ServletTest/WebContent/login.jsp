@@ -4,12 +4,14 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>로그인</title>
+<title>로그인 페이지</title>
 </head>
 <body>
+<!-- 로그인 폼 -->
 	<form action="LoginServlet" method="post">
-		아이디 : <input type="text" name="id"><br><!-- 폼 메서드가 포스트방식일때 한글넣어보기! -->
-		암호 : <input type="password" name="pass"><button>로그인</button>
+		아이디 : <input type="text" name="id"><br><!-- 한글입력해보기 -->
+		비밀번호 : <input type="password" name="pass"><br>
+		<button>로그인</button>
 	</form>
 </body>
 </html>

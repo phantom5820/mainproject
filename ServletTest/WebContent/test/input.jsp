@@ -7,8 +7,9 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<!-- 전송 버튼 클릭을 했을때 RouteTest 서블릿에서 result 폴더에 있는 route_result.jsp로 이동하여 입력한 내용을 출력 -->
-	<form action="../RouteTest">
+	<!-- 전송 버튼 클릭을 했을때 RouteTest 서블릿에서 
+	result 폴더에 있는 route_result.jsp로 이동하여 입력한 내용을 출력 -->
+	<form action="../RouteTest" method="get">
 		<input type="text" name="txt"><button>전송</button>
 	</form>
 </body>
