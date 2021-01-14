@@ -39,10 +39,12 @@ select * from
 (select ceil(rownum / 5) as page, qno, title, content, wdate, writer, status, response
 from (select * from qna where writer = 'A0001' order by qno desc)) where page = 1;
 
+select * from QNA;
 
 select * from member;
 (select ceil(rownum / 5) as page, qno, title, content, wdate, writer, status, response
 from (select * from qna order by status asc, qno desc)) where page = 1;
+
 
 
 

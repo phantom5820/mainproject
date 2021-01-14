@@ -13,5 +13,8 @@ create sequence qno_seq start with 1;
 select pno, title, content from QNA;
 
 select * from MEMBER;
-
+SELECT * FROM USER_SEQUENCES;
 update member set grade = '1' where name like '홍길동';
+
+alter table qna rename column pno to qno;
+select * from qna;
