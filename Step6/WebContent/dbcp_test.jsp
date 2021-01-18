@@ -11,8 +11,7 @@ Context initContext = new InitialContext();
 Context envContext  = (Context)initContext.lookup("java:/comp/env");
 DataSource ds = (DataSource)envContext.lookup("jdbc/myoracle");
 Connection conn = ds.getConnection();
-String sql = "select id, name, pass, age, grade_name "
-			+"from member, grade_list where grade_no = grade";
+String sql = "select id, name, pass, age, grade_name from member, grade_list where grade_no = grade";
 	
 	Statement stmt = conn.createStatement();
 	ResultSet rs = stmt.executeQuery(sql);

@@ -37,6 +37,18 @@ public class QnAService {
 	public int selectCount() {
 		return dao.getInstance().selectCountQna();
 	}
+
+	public QnaDTO selectQna(int qno) {
+		//문의 글을 읽음 처리
+		dao.getInstance().updateQnAStatus(qno);
+		//문의 글을 읽어옴
+		return dao.getInstance().selectQna(qno);
+	}
+
+	public int updateResponse(int qno, String answer) {
+		//문의글 답변
+		return dao.getInstance().updateResponse(qno,answer);
+	}
 	
 	
 }

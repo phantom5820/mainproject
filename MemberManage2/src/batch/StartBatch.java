@@ -10,7 +10,7 @@ import javax.servlet.annotation.WebListener;
  */
 @WebListener
 public class StartBatch implements ServletContextListener {
-	//스케줄러 종료
+	
 	CronTriggerMaker js;
     /**
      * Default constructor. 
@@ -34,6 +34,7 @@ public class StartBatch implements ServletContextListener {
     	System.out.println("MemberManger Start");
 //    	js = new CronTriggerMaker("0/5 * * * * ?", SearchNoAnswerList.class);
 //		js.createTrigger();
+    	
     }
 	
 }

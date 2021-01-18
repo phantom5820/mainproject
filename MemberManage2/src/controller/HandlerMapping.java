@@ -42,6 +42,27 @@ public class HandlerMapping {
 		case "qnaAdminView.do":
 			controller = new QnaAdminViewController();
 			break;
+		case "adminQnaDetailView.do":
+			controller = new QnaAdminDetailViewController();
+			break;
+		case "answer.do":
+			controller = new ResponeUpdateController();
+			break;
+		case "main.do":
+			controller = new MainMoveController();
+			break;
+		case "boardWriteView.do":
+			controller = new BoardWriteController();
+			break;
+		case "loginView.do":
+			controller = new LoginViewController();
+			break;
+		case "boardWriteAction.do":
+			controller = new BoardWriteActionController();
+			break;
+		case "boardView.do":
+			controller = new BoardViewController();
+			break;
 			
 		}
 		return controller;
