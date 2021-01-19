@@ -2,6 +2,7 @@ package file;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -36,26 +37,27 @@ public class FileUploadServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
 		String encoding = "utf-8";
-		File filePath = new File(
-				request.getSession().getServletContext().getRealPath("/")+"/upload");
-		System.out.println(filePath.toURI());
-		System.out.println(filePath.getAbsolutePath());
+		//경로 만들기
+		String root = "c:\\fileupload\\";
+		File userRoot = new File(root);
+		System.out.println("파일 업로드할 기본 폴더 : "+userRoot);
 		
-		if(!filePath.exists()) {
-			filePath.mkdirs();//해당경로까지 모든 폴더를 다 만들어줌
-		}
-		
+	
 		DiskFileItemFactory factory = new DiskFileItemFactory();
-		factory.setRepository(filePath);//업로드될 폴더
+		factory.setRepository(userRoot);//업로드될 폴더
 		factory.setSizeThreshold(1024 * 1024);//1mb -> 버퍼 메모리
 		ServletFileUpload upload = new ServletFileUpload(factory);
 		
 		try {
 			List<FileItem> list = upload.parseRequest(request);
+			ArrayList<FileDTO> fList = new ArrayList<FileDTO>();
+			String user = "default";
 			for(int i=0;i<list.size();i++) {
 				FileItem item = list.get(i);
 				if(item.isFormField()) {
-					//받은 내용중에 파일이 아닌경우
+					//받은 내용중에 파일이 아닌 경우
+					if(item.getFieldName().equals("writer"))
+						user = item.getString(encoding);
 					System.out.println(item.getFieldName() + " : " + item.getString(encoding));
 				}else {
 					//받은 내용중에 파일인 경우
@@ -68,16 +70,26 @@ public class FileUploadServlet extends HttpServlet {
 						if(idx==-1)
 							idx = item.getName().lastIndexOf("/");
 						String fileName = item.getName().substring(idx+1);
-						File uploadFile = new File(filePath + "\\" + fileName);
+						//파일 경로 완성해주는 부분
+						File uploadFile = new File(userRoot.getAbsolutePath() + "\\" + user + fileName);
+						if(!uploadFile.getParentFile().exists()) // 해당 파일이 들어갈 폴더까지 경로가 유효한지 물어보는 부분
+							uploadFile.getParentFile().mkdirs(); // 유효하지 않다면 해당 경로까지 모든 폴더 생성
 						System.out.println("셋팅된 전체 경로 : "+uploadFile);
-						item.write(uploadFile);
-						request.setAttribute("file"+i, request.getContextPath() + "/upload/"+fileName);
-						request.setAttribute("fileName"+i, fileName);
+						item.write(uploadFile); // 여기가 파일 쓰기가 된 부분이다
+						fList.add(new FileDTO(uploadFile));
 						
+						
+					//	전체경로
+//						String root = request.getSession().getServletContext().getRealPath("/")+"/upload/";
+//						String name = fileName;
+//						FileDTO dto = new FileDTO(new File(root + "\\" + name));
+//						request.setAttribute("dto"+i, dto);
 					}
 					
 				}
 			}
+			request.setAttribute("file", fList);
+			request.setAttribute("usere", user); 
 		} catch (FileUploadException e) {
 			e.printStackTrace();
 		} catch (Exception e) {

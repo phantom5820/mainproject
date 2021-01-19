@@ -93,6 +93,12 @@ where b.bno = c.bno(+) order by b.bno desc) where rownum >= 8;--지금처럼 조
 
 
 
+--파일 업로드 해서 업로드된 파일을 저장하기 위한 테이블 (2021-01-17)
+CREATE TABLE BOARD_FILE_LIST(
+	BNO NUMBER,
+	WRITER VARCHAR2(25 BYTE),
+	FILENAME VARCHAR2(100 BYTE)
+);
 
 
 

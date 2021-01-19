@@ -1,0 +1,12 @@
+파일 업로드시
+서블릿에서 해야될일
+
+1. 저장이 될 기본 경로를 지정한다
+2. DiskFileItemFactory
+	기본폴더 지정, 버퍼 메모리 설정, ServletFileUpload를 생성하고 - DiskFileItemFactory 객체가 필요
+
+	ServletFileUpload 객체의 parseRequest(request)호출시 모든 파라미터를 읽어옴 ---> list<FileItem> 반환
+	이 리스트를 가지고 처음부터 끝까지 하나씩 접근한다.
+	item에 isFormField --> 파일이 아닌 다른 폼태그인지 확인한다.
+	true면 파일이 아님, false면 파일임
+	파일일때는 item.write(업로드할 전체 경로) 파일쓰기 --> item.write() 를 이용해서 업로드할 전체 경로 변수를 넣는다.	
