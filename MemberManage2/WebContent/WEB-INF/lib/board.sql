@@ -100,5 +100,8 @@ CREATE TABLE BOARD_FILE_LIST(
 	FILENAME VARCHAR2(100 BYTE)
 );
 
+-- BOARD_FILE_LIST 외래키 넣기 
+alter table BOARD_FILE_LIST add constraint fk_File_bno foreign key(bno) references board(bno) on delete cascade;
+--기존에 외래키를 넣어놨다면 외래키가 있다면 (지우고 다시 만든다! 외래키는 수정이 안되기 때문이다)
 
 

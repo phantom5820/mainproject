@@ -271,16 +271,69 @@ public class BoardDAO {
 				pstmt = manager.getConn().prepareStatement(sql);
 				pstmt.setInt(1, fList.get(i).getBno());
 				pstmt.setString(2, fList.get(i).getWriter());
-				pstmt.setString(3, fList.get(i).getPath());
+				pstmt.setString(3, fList.get(i).getFileName());
 				pstmt.executeUpdate();
-				pstmt.close();
+				manager.getConn().commit();
 			}
+			pstmt.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		
 	}
+
+	public ArrayList<FileDTO> selectFileList(int bno) {
+		String sql = "select * from board_file_list where bno = ?";
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		ArrayList<FileDTO> list = new ArrayList<FileDTO>();
+		try {
+			pstmt = manager.getConn().prepareStatement(sql);
+			pstmt.setInt(1, bno);
+			
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				list.add(new FileDTO(rs.getInt(1),rs.getString(2), rs.getString(3)));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return list;
+	}
+
+	public void deleteFileList(int bno) {
+		String sql = "delete from board_file_list where bno = ?";
+		
+		PreparedStatement pstmt = null;
+		
+		try {
+			pstmt = manager.getConn().prepareStatement(sql);
+			pstmt.setInt(1, bno);
+			int count = pstmt.executeUpdate();
+			System.out.println("파일 DB 삭제 결과 : " + count);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	public void deleteBoard(int bno) {
+		String sql = "delete from board where bno = ?";
+		
+		PreparedStatement pstmt = null;
+		
+		try {
+			pstmt = manager.getConn().prepareStatement(sql);
+			pstmt.setInt(1, bno);
+			int count = pstmt.executeUpdate();
+			System.out.println("파일 DB 삭제 결과 : " + count);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+		
 }
+	
+
 
 
 

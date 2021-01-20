@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="db.sqlmapper">
+ 	<select id="selectAllCountEmployee" resultType="int"><!-- int형으로 result값을 돌려주겠다라는 뜻 -->
+ 		select count(*) from employee <!-- ; 세미콜론은 생략한다!! -->
+ 	</select>
+ 	<select id="selectAllEmployee" resultType="dto.EmployeeDTO">
+		select * from employee 	<!-- ; 세미콜론은 생략한다!! -->
+ 	</select>
+ 	<select id="selectPositionEmployee" resultType="dto.EmployeeDTO" parameterType="int"> <!-- parameterType="int"이렇게 하면 #{no}에 정수값 하나를 받아오겠다라는뜻이다 -->
+		
+		<!-- 꺽쇠는 태그로 인식하기때문에 마이바티스에서 꺽쇠를 쓰려면 xml에선 <![CDATA[ sql문 ]]> 이렇게 써주어야한다!!!-->
+		<![CDATA[select * from employee where position < #{no}]]> <!-- ; 세미콜론은 생략한다!! -->
+ 	</select>
+ 	<select id="selectPositionAreaEmployee" resultType="int" parameterType="map">
+ 		<![CDATA[select count(*) from employee where position between #{n1} and #{n2}]]> <!-- ; 세미콜론은 생략한다!! -->
+ 	</select>
+</mapper>

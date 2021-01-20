@@ -9,7 +9,9 @@ public class LoginViewController implements Controller {
 
 	@Override
 	public ModelAndView execute(HttpServletRequest request, HttpServletResponse response) {
-		System.out.println(request.getSession().getAttribute("result_url"));
+		// TODO Auto-generated method stub
+		System.out.println(request.getSession().getAttribute("resultPage"));
+		System.out.println(request.getSession().getAttributeNames().toString());
 		return new ModelAndView("login.jsp",false);
 	}
 

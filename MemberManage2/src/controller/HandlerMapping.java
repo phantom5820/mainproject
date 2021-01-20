@@ -63,6 +63,18 @@ public class HandlerMapping {
 		case "boardView.do":
 			controller = new BoardViewController();
 			break;
+		case "imageLoad.do":
+			controller = new ImageLoadController();
+			break;
+		case "plusLikeHate.do":
+			controller = new PlusLikeHateController();
+			break;
+		case "insertComment.do":
+			controller = new InsertCommentController();
+			break;
+		case "deleteBoard.do":
+			controller = new DeleteBoardController();
+			break;
 		}
 		return controller;
 	}

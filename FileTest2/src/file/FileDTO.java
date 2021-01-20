@@ -8,6 +8,7 @@ public class FileDTO {
 	private String path;
 	private String fileName;
 	private String type;
+	
 	public FileDTO(File file) {
 		super();
 		this.path = file.getAbsolutePath();

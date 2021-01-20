@@ -11,6 +11,13 @@ public class BoardDTO {
 	private int bHate;
 	private int cCount;
 	
+	public int getcCount() {
+		return cCount;
+	}
+
+	public void setcCount(int cCount) {
+		this.cCount = cCount;
+	}
 
 	public BoardDTO(String title, String writer, String content) {
 		super();
@@ -18,8 +25,6 @@ public class BoardDTO {
 		this.writer = writer;
 		this.content = content;
 	}
-	
-	
 	
 	public BoardDTO(int bno, String title, String bDate, int bCount, String writer, String content, int bLike,
 			int bHate) {
@@ -33,6 +38,7 @@ public class BoardDTO {
 		this.bLike = bLike;
 		this.bHate = bHate;
 	}
+	
 	public BoardDTO(int bno, String title, String bDate, int bCount, String writer, String content, int bLike,
 			int bHate, int cCount) {
 		super();
@@ -47,15 +53,6 @@ public class BoardDTO {
 		this.cCount = cCount;
 	}
 
-
-
-	public int getcCount() {
-		return cCount;
-	}
-	
-	public void setcCount(int cCount) {
-		this.cCount = cCount;
-	}
 	public String getWriter() {
 		return writer;
 	}
@@ -104,6 +101,7 @@ public class BoardDTO {
 	public void setbHate(int bHate) {
 		this.bHate = bHate;
 	}
+	
 	@Override
 	public String toString() {
 		return "BoardDTO [bno=" + bno + ", title=" + title + ", bDate=" + bDate + ", bCount=" + bCount + ", content="
