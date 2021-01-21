@@ -12,12 +12,12 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
 import dto.EmployeeDTO;
 
-public class EmployeeDAO {
-	private static EmployeeDAO instance = new EmployeeDAO();
+public class MemberDAO2 {
+	private static MemberDAO2 instance = new MemberDAO2();
 	private SqlSessionFactory factory;
 	private SqlSession session;
-	private EmployeeDAO() {
-		String resource = "db/Mybatis_cofig.xml";
+	private MemberDAO2() {
+		String resource = "config/Mybatis_cofig.xml";
 		InputStream inputStream;
 		try {
 			inputStream = Resources.getResourceAsStream(resource);
@@ -29,9 +29,9 @@ public class EmployeeDAO {
 		}
 	}
 
-	public static EmployeeDAO getInstance() {
+	public static  MemberDAO2 getInstance() {
 		if(instance == null)
-			instance = new EmployeeDAO();
+			instance = new  MemberDAO2();
 		return instance;
 	}
 
@@ -40,8 +40,8 @@ public class EmployeeDAO {
 		count = session.selectOne("db.sqlmapper.selectAllCountEmployee");
 		return count;
 	}
-	public List<EmployeeDTO> selectAllEmployee() {
-		List<EmployeeDTO> list = session.selectList("db.sqlmapper.selectAllEmployee");
+	public List<MemberDTO> selectAllEmployee() {
+		List<MemberDTO> list = session.selectList("db.sqlmapper.selectAllEmployee");
 		return list;
 	}
 	public List<EmployeeDTO> selectPositionEmployee(int pos) {

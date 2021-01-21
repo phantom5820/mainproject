@@ -4,7 +4,7 @@
 --------------------------------------------------------
 --  DDL for Table EMPLOYEE_SALARY
 --------------------------------------------------------
-select * from EMPLOYEE_SALARY;
+select * from EMPLOYEE;
   CREATE TABLE "EMPLOYEE_SALARY" 
    (	"ENO" VARCHAR2(5 BYTE), 
 	"SALARY" NUMBER

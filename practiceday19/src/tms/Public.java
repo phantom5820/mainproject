@@ -9,6 +9,6 @@ public abstract class Public {
 	//showDestMSG(String destination): 도착시 "도착지에 도착했습니다." 메세지 출력하는 메서드
 	abstract void showDestMSG(String destination);
 	
-	abstract void go(int btnIndex);
+	abstract void go(int btnIndex, int money);
 	
 	}
