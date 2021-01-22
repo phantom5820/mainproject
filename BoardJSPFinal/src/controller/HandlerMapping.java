@@ -75,6 +75,18 @@ public class HandlerMapping {
 		case "deleteBoard.do":
 			controller = new DeleteBoardController();
 			break;
+		case "memberAdminMain.do":
+			controller = new MemberAdminController();
+			break;
+		case "memberSearch.do":
+			controller = new MemberSearchController();
+			break;
+		case "memberAjaxUpdate.do":
+			controller = new MemberAjaxUpdateController();
+			break;
+		case "memberAjaxDelete.do":
+			controller = new MemberAjaxDeleteController();
+			break;
 		}
 		return controller;
 	}

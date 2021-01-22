@@ -5,6 +5,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import org.apache.ibatis.session.SqlSession;
 
 import config.DBManager;
 import dto.BoardDTO;
@@ -13,10 +17,10 @@ import dto.FileDTO;
 
 public class BoardDAO {
 	private static BoardDAO instance = new BoardDAO();
-	private DBManager manager;
+	private SqlSession session;
 
 	private BoardDAO() {
-		manager = DBManager.getInstance();
+		session = DBManager.getInstance().getSession();
 	}
 
 	public static BoardDAO getInstance() {
@@ -27,159 +31,48 @@ public class BoardDAO {
 
 	// 게시글 번호 뽑는 부분
 	public int getBoardNO() {
-		String sql = "select bno_seq.nextval from dual";
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		int result = 0;
-		try {
-			pstmt = manager.getConn().prepareStatement(sql);
-			rs = pstmt.executeQuery();
-			if (rs.next())
-				result = rs.getInt(1);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			manager.close(pstmt, rs);
-		}
+		int result = session.selectOne("board.getBoardNO");
 		return result;
 	}
 
 	public void insertBoardDTO(BoardDTO dto) {
-		String sql = "insert into board(bno,title,writer,content) values(?,?,?,?)";
-		PreparedStatement pstmt = null;
-		try {
-			Connection conn = manager.getConn();
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, dto.getBno());
-			pstmt.setString(2, dto.getTitle());
-			pstmt.setString(3, dto.getWriter());
-			pstmt.setString(4, dto.getContent());
-
-			int count = pstmt.executeUpdate();
-			conn.commit();
-			System.out.println(count + "건 게시글 등록 완료");
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			manager.close(pstmt, null);
-		}
+		session.insert("board.insertBoard", dto);
+		session.commit(); 
 	}
 
 	public BoardDTO selectBoardDTO(int bno) {
-		String sql = "select * from board where bno = ?";
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		BoardDTO dto = null;
-		try {
-			pstmt =manager.getConn().prepareStatement(sql);
-			pstmt.setInt(1, bno);
-			rs = pstmt.executeQuery();
-			if (rs.next()) {
-				dto = new BoardDTO(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getString(5),
-						rs.getString(6), rs.getInt(7), rs.getInt(8));
-			}
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			manager.close(pstmt, rs);
-		}
-		System.out.println(dto.toString());
-		return dto;
+		return session.selectOne("board.selectBoardDTO", bno);
 	}
 
 	public void addCount(int bno) {
-		String sql = "update board set bcount=bcount + 1 where bno = ?";
-		PreparedStatement pstmt = null;
-
-		try {
-			Connection conn = manager.getConn();
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, bno);
-
-			pstmt.executeUpdate();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			manager.close(pstmt, null);
-		}
-
+		session.update("board.addCount", bno);
+		session.commit();
 	}
 
 	public void addLikeHate(int bno, int mode) {
-		String sql;
-		if (mode == 0)
-			sql = "update board set blike = blike + 1 where bno=?";
-		else
-			sql = "update board set bhate = bhate + 1 where bno=?";
-
-		PreparedStatement pstmt = null;
-
-		try {
-			Connection conn = manager.getConn();
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, bno);
-			pstmt.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			manager.close(pstmt, null);
-		}
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("bno",bno );
+		map.put("mode",mode );
+		int count = session.update("board.addLikeHate", map);
+		session.commit();
+		System.out.println(count);
+		
 	}
 
 	public int selectLikeHate(int bno, int mode) {
 		int result = 0;
-		String sql;
-		if (mode == 0)
-			sql = "select blike from board where bno=?";
-		else
-			sql = "select bhate from board where bno=?";
-
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		try {
-			pstmt = manager.getConn().prepareStatement(sql);
-			pstmt.setInt(1, bno);
-			rs = pstmt.executeQuery();
-			if (rs.next()) {
-				result = rs.getInt(1);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			manager.close(pstmt, rs);
-		}
-
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("bno",bno );
+		map.put("mode",mode );
+		result = session.selectOne("board.selectLikeHate", map);
 		return result;
 	}
 
-	public ArrayList<BoardDTO> selectBoardList(int pageNo,String mode) {
-		String sql = "select * from "
-				+ "(select ceil(rownum / 7) as pagenum,bno,title,bdate,bcount,"
-				+ "writer,content,blike,bhate,comment_count from "
-				+ "(select b.*, nvl(c.comment_count,0) as comment_count from "
-				+ "board b,(select bno, count(*) as comment_count from "
-				+ "board_comment group by bno) c where b.bno = c.bno(+) order by b."+mode+" desc)) "
-				+ "where pagenum = ?";
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		ArrayList<BoardDTO> list = new ArrayList<BoardDTO>();
-		try {
-			pstmt = manager.getConn().prepareStatement(sql);
-			pstmt.setInt(1, pageNo);
-			rs = pstmt.executeQuery();
-			while (rs.next()) {
-				list.add(new BoardDTO(rs.getInt(2), rs.getString(3), rs.getString(4), rs.getInt(5), rs.getString(6),
-						rs.getString(7), rs.getInt(8), rs.getInt(9),rs.getInt(10)));
-			}
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			manager.close(pstmt, rs);
-		}
-		return list;
+	public List<BoardDTO> selectBoardList(int pageNo,String mode) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("pageNo", pageNo);
+		map.put("mode", mode );
+		return session.selectList("board.selectBoardList", map);
 	}
 
 	public int insertBoardComment(CommentDTO dto) {

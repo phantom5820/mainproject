@@ -1,5 +1,5 @@
 package tms;
 
-public class Subway {
+public class Subway extends Public{
 
 }

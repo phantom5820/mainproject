@@ -16,5 +16,8 @@
   </environments>
   <mappers>
     <mapper resource="config/member-mapper.xml"/><!-- 오타나면 안된다!! db패키지 안에 sqlmapper.xml 파일이다!! -->
+    <mapper resource="config/board-mapper.xml"/><!-- 오타나면 안된다!! db패키지 안에 sqlmapper.xml 파일이다!! -->
+ 
+ 
   </mappers>
 </configuration>

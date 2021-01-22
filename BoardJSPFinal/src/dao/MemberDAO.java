@@ -4,6 +4,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
 
@@ -33,148 +35,49 @@ public class MemberDAO {
 	}
 
 	public void updatePass(String id, String pass) throws MemberException {
-		PreparedStatement pstmt = null;
-		String sql = "update  member set pass = ? where id = ?";
-		try {
-			pstmt = DBManager.getInstance().getConn().prepareStatement(sql);
-			pstmt.setString(1, pass);
-			pstmt.setString(2,id);
-			int count = pstmt.executeUpdate();
-			if(count == 0)
-				throw new MemberException("암호수정에 실패했습니다.");
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("id", id);
+		map.put("pass", pass);
 		
+		session.update("member.updatePass", map);
 	}
 
 	public MemberVO login(String id, String pass) {
-		MemberVO vo = null;
-		String sql = "select id, name, pass, age, grade_name from member, grade_list where grade_no = grade and id like ? and pass like ?";
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		try {
-			pstmt = DBManager.getInstance().getConn().prepareStatement(sql);
-			pstmt.setString(1, id);
-			pstmt.setString(2, pass);
-			rs = pstmt.executeQuery();
-			if(rs.next()) {
-				vo = new MemberVO(rs.getString(1), null, rs.getString(2), rs.getInt(4), rs.getString(5));
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}finally {
-			DBManager.getInstance().close(pstmt, rs);
-		}
-		
-		return vo;
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("id", id);
+		map.put("pass", pass);
+		return session.selectOne("member.login", map);
 	}
 
 	public void updateMember(MemberVO vo) throws MemberException {
-		String sql = "update member set pass=?,name=?,age=? where id=?";
-		PreparedStatement pstmt = null;
-		try {
-			pstmt = DBManager.getInstance().getConn().prepareStatement(sql);
-			pstmt.setString(1, vo.getPass());
-			pstmt.setString(2, vo.getName());
-			pstmt.setInt(3, vo.getAge());
-			pstmt.setString(4, vo.getId());
-			
-			int count = pstmt.executeUpdate();
-			if(count == 0)
-				throw new MemberException("수정할 회원정보가 없습니다.");
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		session.update("member.update", vo);
+		//session.commit(); <-----만약 디비메니저에서 오토커밋 트루를 안해놓았다면 반드시 해주어야한다!!
 	}
 
-	public ArrayList<MemberVO> selectAllMemberVO() {
-		ArrayList<MemberVO> list = new ArrayList<MemberVO>();
-		String sql = "select id, name, pass, age, grade_name "
-				+ "from member, grade_list where grade_no = grade order by grade desc";
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		 
-		try {
-			pstmt = DBManager.getInstance().getConn().prepareStatement(sql);
-			rs = pstmt.executeQuery();
-			
-			while(rs.next()) {
-				list.add(new MemberVO(rs.getString(1), null, rs.getString(2), 
-						rs.getInt(4), rs.getString(5)));
-			}
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}finally {
-			DBManager.getInstance().close(pstmt, rs);
-		}
-		
+	public List<MemberVO> selectAllMemberVO() {
+		//반드시 ArrayList를 사용할 필요가없음 이유는 : ArrayList를 사용하면 is써서 검사하고 해야하기때문에 대부분 List를 사용한다
+		List<MemberVO> list = session.selectList("member.selectAllMemberVO");
 		return list;
 	}
 
-	public ArrayList<MemberVO> searchMember(String kind, String search) {
-		ArrayList<MemberVO> list = new ArrayList<MemberVO>();
-		String sql = "select id, name, pass, age, grade_name "
-				+ "from member, grade_list where grade_no = grade and " + kind + " like ? order by grade desc";
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		
-		try {
-			pstmt = DBManager.getInstance().getConn().prepareStatement(sql);
-			pstmt.setString(1, "%" + search + "%");
-			rs = pstmt.executeQuery();
-			while(rs.next()) {
-				list.add(new MemberVO(rs.getString(1), null, rs.getString(2), 
-						rs.getInt(4), rs.getString(5)));
-			}
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}finally {
-			DBManager.getInstance().close(pstmt, rs);
-		}
-		
-		return list;
+	public List<MemberVO> searchMember(String kind, String search) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("kind", kind);
+		map.put("search", search);
+		return session.selectList("member.searchMember", map);
 	}
 
-	public boolean updateManageMember(MemberVO vo) {
-		String sql = "update member set name=?,age=?,grade="
-				+ "(select grade_no from grade_list where grade_name = ?) where id=?";
-		
-		PreparedStatement pstmt = null;
-		try {
-			pstmt = DBManager.getInstance().getConn().prepareStatement(sql);
-			pstmt.setString(1, vo.getName());
-			pstmt.setInt(2, vo.getAge());
-			pstmt.setString(3, vo.getGrade());
-			pstmt.setString(4, vo.getId());
-			
-			int count = pstmt.executeUpdate();
-			if(count == 0)
-				return false;
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return true;
+	public int updateManageMember(MemberVO vo) {
+		int count = session.update("member.updateManageMember", vo);
+		session.commit();
+		return count;
 	}
 	
 	
-	public boolean deleteMember(String id) {
-		String sql = "delete from member where id=?";
-		
-		PreparedStatement pstmt = null;
-		try {
-			pstmt = DBManager.getInstance().getConn().prepareStatement(sql);
-			pstmt.setString(1, id);
-
-			int count = pstmt.executeUpdate();
-			if(count == 0)
-				return false;
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return true;
+	public int deleteMember(String id) {
+		int count = session.delete("member.deleteMember", id);
+		session.commit();
+		return count;
 	}
 	
 	

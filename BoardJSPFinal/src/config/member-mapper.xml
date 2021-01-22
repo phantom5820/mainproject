@@ -18,8 +18,49 @@
  	
  	<!-- ------------------------------------------------------------------ -->
  	
- 	<update id="updatePass" parameterType="String">
- 		update  member set pass = #{pass} where id = #{id}
+ 	<update id="updatePass" parameterType="map">
+ 		update member set pass = #{pass} where id = #{id}
  	</update>
+ 	
+ 	<select id="login" parameterType="map" resultType="vo.MemberVO">
+ 		select id, name, pass, age, grade_name from member, grade_list where grade_no = grade and id like #{id} and pass like #{pass}
+ 	</select>
+ 	
+ 	<update id="updateMember" parameterType="vo.MemberVO">
+		update member set pass=#{pass},name=#{name},age=#{age} where id=#{id} 	
+ 	</update>
+ 	
+ 	<select id="selectAllMember" resultType="vo.MemberVO">
+ 		select id, name, pass, age, grade_name from member, grade_list where grade_no = grade order by grade desc
+ 	</select>
+ 	
+ 	<select id="searchMember" resultType="vo.MemberVO" >
+ 		select id, name, pass, age, grade_name from member, grade_list where grade_no = grade and " + kind + " like ? order by grade desc
+ 	</select>
+ 	
+ 	<select id="searchMember" parameterType="map" resultType="vo.MemberVO">
+ 		<choose>
+ 			<when test="kind.equalse('name')">
+ 			select id, name, pass, age, grade_name from member, grade_list 
+ 			where grade_no = grade and name like '%'||#{search}||'%' order by grade desc
+ 			</when>
+ 			<when test="kind.equalse('id')">
+ 			select id, name, pass, age, grade_name from member, grade_list 
+ 			where grade_no = grade and id like '%'||#{search}||'%' order by grade desc
+ 			</when>
+ 			<otherwise>
+ 			select id, name, pass, age, grade_name from member, grade_list 
+ 			where grade_no = grade and grade_name like '%'||#{search}||'%' order by grade desc
+ 			</otherwise>
+ 		</choose>
+ 	</select>
+ 	<update id="updateManageMember" parameterType="vo.MemberVO">
+ 		update member set name=#{name},age=#{age},
+ 		grade=(select grade_no from grade_list where grade_name = #{grade}) where id=#{id}
+ 	</update>
+ 	
+ 	<delete id="deleteMember" parameterType="String">
+ 		delete from member where id=#{id}
+ 	</delete>
  	
 </mapper>

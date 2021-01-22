@@ -1,6 +1,7 @@
 package service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import dao.MemberDAO;
 import exception.MemberException;
@@ -49,14 +50,18 @@ public class MemberService {
 	public void updateMemberVO(MemberVO vo) throws MemberException {
 		dao.updateMember(vo);
 	}
-	public boolean updateManageMemberVO(MemberVO vo) throws MemberException {
+	public int updateManageMemberVO(MemberVO vo) throws MemberException {
 		return dao.updateManageMember(vo);
 	}
-	public ArrayList<MemberVO> selectAllMemberVO(){
+	public List<MemberVO> selectAllMemberVO(){
 		return dao.selectAllMemberVO();
 	}
-	public ArrayList<MemberVO> searchMember(String kind, String search){
+	public List<MemberVO> searchMember(String kind, String search){
 		return dao.searchMember(kind,search);
+	}
+
+	public int deleteMember(String id) {
+		return dao.deleteMember(id);
 	}
 	
 	

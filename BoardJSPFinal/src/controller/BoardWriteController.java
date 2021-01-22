@@ -109,6 +109,7 @@ public class BoardWriteController implements Controller {
 			ArrayList<FileDTO> fList = new ArrayList<FileDTO>();
 			String user = "default";
 			int bno = 0;
+			
 			String title = "";
 			String content = "";
 			String writer = "";
